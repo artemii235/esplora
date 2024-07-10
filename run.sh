@@ -178,12 +178,12 @@ elif [ "$MODE" != "private-bridge" ] && [ "$MODE" != "public-bridge" ]; then
     exit 1
 fi
 
-preprocess /srv/explorer/source/contrib/${DAEMON}-${NETWORK}-${MODE}.conf.in /data/.${DAEMON}.conf
+# preprocess /srv/explorer/source/contrib/${DAEMON}-${NETWORK}-${MODE}.conf.in /data/.${DAEMON}.conf
 
 if [ "$DAEMON" == "liquid" ]; then
     if [ "$NETWORK" == "mainnet" ]; then
         mkdir -p /etc/service/bitcoin/log /data/logs/bitcoin
-        preprocess /srv/explorer/source/contrib/bitcoin-mainnet-pruned-for-liquid.conf.in /data/.bitcoin.conf
+        # preprocess /srv/explorer/source/contrib/bitcoin-mainnet-pruned-for-liquid.conf.in /data/.bitcoin.conf
         cp /srv/explorer/source/contrib/runits/bitcoin_for_liquid.runit /etc/service/bitcoin/run
         cp /srv/explorer/source/contrib/runits/bitcoin_for_liquid-log.runit /etc/service/bitcoin/log/run
         cp /srv/explorer/source/contrib/runits/bitcoin_for_liquid-log-config.runit /data/logs/bitcoin/config
@@ -198,13 +198,13 @@ if [ "$DAEMON" == "liquid" ]; then
     fi
 fi
 
-if [ -f /data/public_nodes ]; then
-    cat /data/public_nodes >> /data/.${DAEMON}.conf
-fi
+#if [ -f /data/public_nodes ]; then
+    # cat /data/public_nodes >> /data/.${DAEMON}.conf
+#fi
 
-if [ -f /data/private_nodes ]; then
-    cat /data/private_nodes >> /data/.${DAEMON}.conf
-fi
+#if [ -f /data/private_nodes ]; then
+    # cat /data/private_nodes >> /data/.${DAEMON}.conf
+#fi
 
 TORRCFILE="/srv/explorer/source/contrib/${DAEMON}-${NETWORK}-${MODE}-torrc"
 if [ -f $TORRCFILE ]; then
@@ -214,7 +214,7 @@ if [ -f $TORRCFILE ]; then
     # pick random peers from a file (for private-bridge using torv3)
     cp ${TOR_DIR}/torv3rc /etc/tor/torrc
     shuf -n 4 ${TOR_DIR}/torv3_connect > /etc/tor/torv3_connect
-    tail -4 /etc/tor/torv3_connect | awk -F: '{print "connect="$1".onion:10100"}' >> /data/.${DAEMON}.conf
+    # tail -4 /etc/tor/torv3_connect | awk -F: '{print "connect="$1".onion:10100"}' >> /data/.${DAEMON}.conf
 else
     echo "ControlPort 9051" >> /etc/tor/torrc
 fi
@@ -267,6 +267,10 @@ preprocess /srv/explorer/source/contrib/runits/nodedaemon.runit /etc/service/${D
 cp /srv/explorer/source/contrib/runits/nodedaemon-log.runit /etc/service/${DAEMON}/log/run
 cp /srv/explorer/source/contrib/runits/nodedaemon-log-config.runit /data/logs/nodedaemon/config
 chmod +x /etc/service/${DAEMON}/run
+
+mkdir -p /etc/service/mining
+preprocess /srv/explorer/source/contrib/runits/mining.runit /etc/service/mining/run
+chmod +x /etc/service/mining/run
 
 if [ "${NETWORK}" == "regtest" ] && [ -z "${NO_REGTEST_MINING}" ]; then
     if [ "${DAEMON}" != "liquid" ]; then

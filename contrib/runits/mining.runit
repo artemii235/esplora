@@ -1,0 +1,13 @@
+#!/bin/sh -e
+# wait a while for the bitcoin node to bootstrap
+sleep 10
+# `generate` is deprecated in 0.18.0, we need to generate an address and
+# use generatetoaddress
+# bitcoin-cli -regtest createwallet yonatest
+/srv/explorer/{DAEMON}/bin/{DAEMON}-cli -conf=/data/.{DAEMON}.conf -datadir=/data/{DAEMON} -regtest loadwallet yonatest
+# bitcoin-cli -regtest -generate 101
+while true
+do
+    /srv/explorer/{DAEMON}/bin/{DAEMON}-cli -conf=/data/.{DAEMON}.conf -datadir=/data/{DAEMON} -regtest -generate 1
+    sleep 60
+done
