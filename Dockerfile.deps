@@ -20,7 +20,7 @@ ENV CORE_SRC=/root/bitcoin
 COPY ${CORE_PATCH} /${CORE_PATCH}
 RUN git clone --quiet --depth 1 --branch v27.1 --single-branch --recursive https://github.com/bitcoin/bitcoin.git ${CORE_SRC} \
  && (cd ${CORE_SRC} \
- && sed -i 's/consensus.nSubsidyHalvingInterval = 150/consensus.nSubsidyHalvingInterval = 210000/g' src/chainparams.cpp \
+ && sed -i 's/consensus.nSubsidyHalvingInterval = 150/consensus.nSubsidyHalvingInterval = 210000/g' src/kernel/chainparams.cpp \
  && (cd depends \
  && make HOST=x86_64-pc-linux-gnu NO_QT=1 -j $(nproc --all)) \
  && ./autogen.sh \
@@ -29,7 +29,8 @@ RUN git clone --quiet --depth 1 --branch v27.1 --single-branch --recursive https
                 --disable-glibc-back-compat --disable-ccache --disable-dependency-tracking --disable-tests --with-gui=no --with-sqlite=yes \
  && make -j $(nproc --all) \
  && make install -j $(nproc --all) \
- && strip /srv/explorer/bitcoin/bin/*)
+ && strip /srv/explorer/bitcoin/bin/* \
+ && rm -fr ${CORE_SRC})
 
 #ENV SHA256SUM_BITCOINCORE=59ebd25dd82a51638b7a6bb914586201e67db67b919b2a1ff08925a7936d1b16
 #ENV VERSION_BITCOINCORE=22.0
