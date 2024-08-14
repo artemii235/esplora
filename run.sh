@@ -150,6 +150,8 @@ function preprocess(){
        -e "s|{NGINX_NOSLASH_PATH}|$NGINX_NOSLASH_PATH|g" \
        -e "s|{ASSETS_GIT}|$ASSETS_GIT|g" \
        -e "s|{ASSETS_GPG}|$ASSETS_GPG|g" \
+       -e "s|{BLOCK_TIME}|$BLOCK_TIME|g" \
+       -e "s|{WALLET}|$WALLET|g" \
    >$out_file
 }
 

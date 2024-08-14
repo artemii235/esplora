@@ -2,6 +2,9 @@ FROM artempikulin/esplora-base:latest AS build
 
 FROM debian:bullseye@sha256:4d6ab716de467aad58e91b1b720f0badd7478847ec7a18f66027d0f8a329a43c
 
+ENV BLOCK_TIME=60
+ENV WALLET=yonatest
+
 COPY --from=build /srv/explorer /srv/explorer
 #COPY --from=build /srv/wally_wasm /srv/wally_wasm
 COPY --from=build /root/.nvm /root/.nvm
